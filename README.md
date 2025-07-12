@@ -26,6 +26,24 @@ A simple authentication backend built with **Express.js**, **PostgreSQL**, and *
 
 ---
 
+## 🔨 Setup & Running Locally
+### Prerequisites
+- Node.js (v16+ recommended)
+- PostgreSQL (if not using Docker)
+- npm or yarn
+
+- Copy `.env.sample` to `.env` to create your local environment configuration:
+
+  ```bash
+  cp .env.sample .env
+
+- update `.env` with your actual values
+
+## Run
+
+```bash
+docker-compose up --build
+
 ## 🧪 API Endpoints
 
 Base URL: `http://localhost:5002/api/auth`
