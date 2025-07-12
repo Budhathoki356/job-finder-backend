@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  backend:
+    build: .
+    container_name: job-finder-backend
+    ports:
+      - '5002:5002'
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      NODE_ENV: development
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+    volumes:
+      - .:/app
+    command: ./scripts/docker-entrypoint.sh
+  
+  postgres:
+    image: postgres:15
+    container_name: job-finder-db
+    restart: always
+    ports:
+      - '5433:5432'
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: job_finder
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
