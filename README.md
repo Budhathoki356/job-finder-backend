@@ -26,24 +26,6 @@ A simple authentication backend built with **Express.js**, **PostgreSQL**, and *
 
 ---
 
-## 📦 Project Structure
-
-│
-├── index.ts # Entry point
-├── routes/
-│ └── auth.route.ts # Auth route handlers
-├── controllers/
-│ └── auth.controller.ts # Signup & login logic
-├── services/
-│ └── auth.service.ts # Business logic (AuthService)
-├── middleware/
-│ └── auth.middleware.ts # Authentication middleware
-├── prisma/
-│ └── schema.prisma # Prisma DB schema
-
-
----
-
 ## 🧪 API Endpoints
 
 Base URL: `http://localhost:5002/api/auth`
