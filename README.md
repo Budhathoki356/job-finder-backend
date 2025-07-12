@@ -74,4 +74,3 @@ Response
 {
   "accessToken": "JWT_TOKEN"
 }
-```json
