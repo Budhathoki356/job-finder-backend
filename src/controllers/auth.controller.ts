@@ -6,7 +6,7 @@ export const signup = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
     const {accessToken, refreshToken} = await AuthService.signup(name, email, password);
 
-    res.cookie("restToken", refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -24,7 +24,7 @@ export const login = async (req: Request, res: Response) => {
     const {email, password } = req.body;
     const {accessToken, refreshToken} = await AuthService.login( email, password);
 
-    res.cookie("restToken", refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
