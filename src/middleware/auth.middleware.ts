@@ -25,6 +25,7 @@ export const requireAuth = (
 	try {
 		const payload = verifyAccessToken(token);
 		req.userId = payload.userId;
+		req.role = payload.role;
 		next();
 	} catch {
 		res.status(401).json({ error: 'Invalid or expired access token' });
@@ -34,7 +35,7 @@ export const requireAuth = (
 export const authorizeRoles = (...roles: Role[]) => {
 	return (req: AuthRequest, res: Response, next: NextFunction) => {
 		if (!roles.includes(req.role!)) {
-      		return res.status(403).json({ message: "Access denied." });
+      		res.status(403).json({ message: "Access denied." });
     	}
 		next();
 	};
