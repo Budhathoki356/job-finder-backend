@@ -25,6 +25,7 @@ export const requireAuth = (
 	try {
 		const payload = verifyAccessToken(token);
 		req.userId = payload.userId;
+		req.role = payload.role;
 		next();
 	} catch {
 		res.status(401).json({ error: 'Invalid or expired access token' });

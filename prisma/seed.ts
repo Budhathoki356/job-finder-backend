@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Role } from '../generated/prisma';
+import { Role } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
