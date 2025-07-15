@@ -33,6 +33,17 @@ services:
       POSTGRES_DB: job_finder
     volumes:
       - pgdata:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: job-finder-pgadmin
+    ports:
+    - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - postgres
+    restart: unless-stopped
 
 volumes:
   pgdata:
