@@ -34,7 +34,7 @@ export const requireAuth = (
 export const authorizeRoles = (...roles: Role[]) => {
 	return (req: AuthRequest, res: Response, next: NextFunction) => {
 		if (!roles.includes(req.role!)) {
-      		return res.status(403).json({ message: "Access denied." });
+      		res.status(403).json({ message: "Access denied." });
     	}
 		next();
 	};
