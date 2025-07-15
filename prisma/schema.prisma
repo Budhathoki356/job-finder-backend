@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,13 +8,134 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  JOB_SEEKER
+  RECRUITER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  submitted
+  shortlisted
+  rejected
+  under_review
+}
+
+enum NotificationType {
+  application_update 
+  system
+}
+
+enum ReportStatus {
+  open
+  reviewed
+  dismissed
+}
+
 model User {
-  id String @id @default(cuid())
-  name String
-  email String @unique
-  password String
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  password    String
+  role        Role
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  jobSeeker   JobSeekerProfile?
+  recruiter   RecruiterProfile?
+  notifications    Notification[]
+  reportsMade      Report[] @relation("ReportsMade")
+  reportsReceived  Report[] @relation("ReportsReceived")
+}
+
+model JobSeekerProfile {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @unique
+  bio        String?
+  location   String?
+  skills     String[]
+  education  String?
+  experience String?
+  resumeUrl  String?
+
+  applications Application[]
+  savedJobs    SavedJob[]
+}
+
+model RecruiterProfile {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String   @unique
+  companyName   String
+  companyWebsite String?
+  description   String?
+  industry      String?
+
+  jobs          Job[]
+}
+
+model Job {
+  id           String   @id @default(uuid())
+  recruiter    RecruiterProfile @relation(fields: [recruiterId], references: [id])
+  recruiterId  String
+  title        String
+  description  String
+  requirements String
+  location     String
+  salaryRange  String?
+  category     String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  applications Application[]
+  savedBy      SavedJob[]
+  reports      Report[]
+}
+
+model Application {
+  id           String   @id @default(uuid())
+  job          Job      @relation(fields: [jobId], references: [id])
+  jobId        String
+  jobSeeker    JobSeekerProfile @relation(fields: [jobSeekerId], references: [id])
+  jobSeekerId  String
+  coverLetter  String?
+  status       ApplicationStatus @default(submitted)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SavedJob {
+  id           String   @id @default(uuid())
+  job          Job      @relation(fields: [jobId], references: [id])
+  jobId        String
+  jobSeeker    JobSeekerProfile @relation(fields: [jobSeekerId], references: [id])
+  jobSeekerId  String
+  savedAt      DateTime @default(now())
+
+  @@unique([jobId, jobSeekerId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      NotificationType
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  restToken String? @unique
-  restTokenExpiresAt DateTime?
+}
+
+model Report {
+  id               String   @id @default(uuid())
+  reporter         User     @relation("ReportsMade", fields: [reporterId], references: [id])
+  reporterId       String
+  reportedUser     User?    @relation("ReportsReceived", fields: [reportedUserId], references: [id])
+  reportedUserId   String?
+  reportedJob      Job?     @relation(fields: [reportedJobId], references: [id])
+  reportedJobId    String?
+  reason           String
+  status           ReportStatus @default(open)
+  createdAt        DateTime     @default(now())
 }

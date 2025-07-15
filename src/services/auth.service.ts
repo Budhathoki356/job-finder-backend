@@ -1,8 +1,9 @@
+import { Role } from '@prisma/client';
 import prisma from '../prisma/client';
 import { comparePasswords, hashPassword } from '../utils/hash';
 import { generateAccessToken, generateRefreshToken } from '../utils/token';
 
-export const signup = async (name: string, email: string, password: string) => {
+export const signup = async (name: string, email: string, password: string, role:Role = Role.JOB_SEEKER) => {
     if(!email || !password) throw new Error("Email and password are required");
 
     const existingUser = await prisma.user.findUnique({
@@ -16,12 +17,13 @@ export const signup = async (name: string, email: string, password: string) => {
         data: {
             name,
             email,
-            password: hashed
+            password: hashed,
+            role
         }
     });
 
-    const accessToken = generateAccessToken(user.id);
-    const refreshToken = generateRefreshToken(user.id);
+    const accessToken = generateAccessToken(user.id , user.role);
+    const refreshToken = generateRefreshToken(user.id, user.role);
 
     return { accessToken, refreshToken };
     
@@ -37,8 +39,8 @@ export const login = async(email: string, password: string) => {
     const valid = await comparePasswords(password, user.password);
 	if (!valid) throw new Error('Invalid email or password');
 
-    const accessToken = generateAccessToken(user.id);
-    const refreshToken = generateRefreshToken(user.id);
+    const accessToken = generateAccessToken(user.id, user.role);
+    const refreshToken = generateRefreshToken(user.id, user.role);
 
     return {accessToken , refreshToken};
 }
