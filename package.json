@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "dev": "nodemon"
   },
-  "prisma" : {
+  "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],

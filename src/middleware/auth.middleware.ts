@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../utils/token";
-import { Role } from "../../generated/prisma";
+import { Role } from "@prisma/client";
 
 export interface AuthRequest extends Request {
     userId? : string,

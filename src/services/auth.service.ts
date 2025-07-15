@@ -1,9 +1,9 @@
-import { Role } from '../../generated/prisma';
+import { Role } from '@prisma/client';
 import prisma from '../prisma/client';
 import { comparePasswords, hashPassword } from '../utils/hash';
 import { generateAccessToken, generateRefreshToken } from '../utils/token';
 
-export const signup = async (name: string, email: string, password: string, role:Role = "JOB_SEEKER") => {
+export const signup = async (name: string, email: string, password: string, role:Role = Role.JOB_SEEKER) => {
     if(!email || !password) throw new Error("Email and password are required");
 
     const existingUser = await prisma.user.findUnique({
