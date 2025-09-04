@@ -7,7 +7,9 @@ import { profileSchema } from "../validators/jobseeker.schema";
 
 const router = Router();
 
-router.get("/profile", requireAuth, authorizeRoles("JOB_SEEKER"), getProfile);
-router.post("/profile", requireAuth, authorizeRoles("JOB_SEEKER"), validate(profileSchema), createJobSeekerProfile);
+router
+    .route("/profile")
+    .get(requireAuth, authorizeRoles("JOB_SEEKER"), getProfile)
+    .post(requireAuth, authorizeRoles("JOB_SEEKER"), validate(profileSchema), createJobSeekerProfile);
 
 export default router;
